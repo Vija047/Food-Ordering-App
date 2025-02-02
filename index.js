@@ -1,10 +1,17 @@
 const express = require('express');
 const app = express();
 const connectDB = require('./db');
+
+
+
 const PORT = process.env.PORT || 5000;
 connectDB();
-//adding Routers to the app
+//adding Routers imporintg 
 const userRoutes=require('./Routes/UserRoutes');
+
+
+
+//adding Routers
 app.use('/api/user',userRoutes);
 
 // middleware

@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
-const User = require("../../Models/users"); // Ensure correct path
+const User = require("../../Models/users"); 
+
 
 const registerUser = async (req, res) => {
   try {

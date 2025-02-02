@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const MONGODB_URI = "mongodb://localhost:27017/Mydatabase"
+const MONGODB_URI =process.env.MONGODB_URI;
 if (!MONGODB_URI) {
     throw new Error('MONGODB_URI not found');
 }

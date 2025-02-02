@@ -1,36 +1,12 @@
-const mongoose=require('mongoose');
-const { type } = require('os');
+const mongoose = require("mongoose");
 
-//separate shema for menuitems
-const menuitemsshema=({
-    name:{
-        type:String,
-        required:true,
-    },
-    price:{
-        type:Number,
-        required:true,
-    },
-    description:{
-        type:String,
-        required:true,
-    }
-})
-
-const Restaurntshema= new mongoose.Schema({   
-      name:{
-        type:String,
-        required:true,
-      },
-    location:{
-        type:String,
-        required:true,
-    },
-    menuitems:{
-        type:[menuitemsshema],//here we are using array of menu
-        required:true,
-    },
-
-
+const restaurantSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  address: { type: String, required: true },
+  cuisine: { type: String, required: true },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  createdAt: { type: Date, default: Date.now },
 });
-module.exports=mongoose.model('restaurant',Restaurntshema);
+
+const Restaurant = mongoose.model("Restaurant", restaurantSchema);
+module.exports = Restaurant;

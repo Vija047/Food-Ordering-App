@@ -1,6 +1,6 @@
 const express = require("express");
 // const { body, validationResult } = require("express-validator");
-const  {registerUser}  = require("../controllers/User_controller/Users_Register");
+const  { registerUser}  = require("../controllers/User_controller/Users_Register");
 const  {login}=require('../controllers/User_controller/Login');
 
 

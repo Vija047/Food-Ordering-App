@@ -1,25 +1,16 @@
-const jwt = require('jsonwebtoken');
-const User = require('../Models/users');
+const jwt = require("jsonwebtoken");
 
-const isAdmin = async (req, res, next) => {
+const authMiddleware = (req, res, next) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+  if (!token) return res.status(401).json({ error: "Access denied" });
+
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(403).json({ error: 'Access Denied' });
-    }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
-
-    if (!user || user.role !== 'admin') {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
-    req.user = user;
+    req.user = decoded;
     next();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal Server Error' });
+    res.status(400).json({ error: "Invalid token" });
   }
 };
 
-module.exports = { isAdmin };
+module.exports = authMiddleware;

@@ -1,42 +1,26 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const User = require("../../Models/users");
 
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../../Models/users');
-const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
 
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Please provide email and password' });
-        }
-        const user = await User.findOne({ email, isDeleted: false });
-
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: '24h'
-        });
-
-        res.json({
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            token
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Error logging in', error: error.message });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ error: "Invalid email or password" });
     }
-}
 
-module.exports = {login};
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin }, // ✅ Include isAdmin
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { loginUser };

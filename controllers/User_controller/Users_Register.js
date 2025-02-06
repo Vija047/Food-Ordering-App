@@ -3,9 +3,15 @@ const User = require("../../Models/users");
 
 const registerUser = async (req, res) => {
   try {
-    // Check if the request body contains all the required fields
+    // Ensure that req.body is not undefined
+    if (!req.body) {
+      return res.status(400).json({ error: "Request body is missing" });
+    }
+
+    // Destructure the necessary fields from the request body
     const { name, email, password, role } = req.body;
 
+    // Check if all required fields are provided
     if (!name || !email || !password || !role) {
       return res.status(400).json({ error: "All fields are required" });
     }
@@ -16,11 +22,11 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ error: "User already registered" });
     }
 
-    // Hash password
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create userz
+    // Create and save the new user to the database
     const newUser = new User({
       name,
       email,
@@ -29,7 +35,7 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: "User registered successfully", user: newUser });
 
   } catch (error) {
     console.error("Error in user registration:", error);

@@ -4,9 +4,14 @@ const MenuItem = require("../../Models/MenuItems");
 // Add a new restaurant (Admin only)
 const addRestaurant = async (req, res) => {
   try {
-    const { name, location } = req.body;
-    const restaurant = new Restaurant({ name, location });
-    await restaurant.save();
+    const { name, location, cuisine, address } = req.body;
+const exitingresturant=await Restaurant.findOne({name,address});
+if(exitingresturant){
+  return res.status(400).json({message:"Restaurant already exists at this address. Choose another place."});
+
+}
+    const restaurant = new Restaurant({ name, location, cuisine, address });
+await restaurant.save();
     res.status(201).json({ message: "Restaurant added successfully", restaurant });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -27,6 +32,10 @@ const getRestaurants = async (req, res) => {
 const addMenuItem = async (req, res) => {
   try {
     const { name, price } = req.body;
+const exitingmenu=await MenuItem.findOne({name});
+if(exitingmenu){
+  return res.status(400).json({message:"This item is already exit in the menuitems "});
+}
     const restaurantId = req.params.id;
     const menuItem = new MenuItem({ name, price, restaurant: restaurantId });
     await menuItem.save();

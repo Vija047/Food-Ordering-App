@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/admin", authMiddleware, addRestaurant); // Admin only
 router.get("/getadmin", getRestaurants);
 router.post("/admin:id/menu", authMiddleware, addMenuItem); // Admin only
-router.get("/amin:id/menu", getMenuItems);
+router.get("/admin:id/menu", getMenuItems);
 
 module.exports = router;

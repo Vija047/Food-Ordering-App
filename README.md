@@ -1,5 +1,4 @@
 # Food Ordering App - Backend
-
 This is the backend for the Food Ordering App. It provides APIs for user authentication, menu management, order processing, and more.
 
 ## Technologies Used
@@ -62,8 +61,6 @@ backend/
 │   └── orderRoutes.js
 ├── middleware/
 │   └── authMiddleware.js
-├── utils/
-│   └── errorHandler.js
 ├── .env
 ├── .gitignore
 ├── index.js

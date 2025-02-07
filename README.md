@@ -64,7 +64,6 @@ backend/
 │   └── restaurantRoutes.js
 ├── middleware/
 │   └── authMiddleware.js
-├── .env
 ├── .gitignore
 ├── index.js
 ├── package.json

@@ -29,17 +29,24 @@ const placeOrder = async (req, res) => {
 // View order details
 const getOrderDetails = async (req, res) => {
   try {
+    // Fetch order by ID and populate related fields
     const order = await Order.findById(req.params.id)
-      .populate("user", "name email")
-      .populate("restaurant", "name location")
-      .populate("items.menuItem", "name price");
+      .populate("user", "name email")  // Populating user fields (name, email)
+      .populate("restaurant", "name location")  // Populating restaurant fields (name, location)
+      .populate("items.menuItem", "name price");  // Populating menuItem fields (name, price)
 
-    if (!order) return res.status(404).json({ error: "Order not found" });
+    // Check if the order exists
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Respond with the order details
     res.status(200).json({ order });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Update order status (Admin only)
 const updateOrderStatus = async (req, res) => {

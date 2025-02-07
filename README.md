@@ -50,15 +50,18 @@ backend/
 ├── controllers/
 │   ├── authController.js
 │   ├── menuController.js
-│   └── orderController.js
+│   ├── orderController.js
+│   └── restaurantController.js
 ├── models/
 │   ├── User.js
 │   ├── MenuItem.js
-│   └── Order.js
+│   ├── Order.js
+│   └── Restaurant.js
 ├── routes/
 │   ├── authRoutes.js
 │   ├── menuRoutes.js
-│   └── orderRoutes.js
+│   ├── orderRoutes.js
+│   └── restaurantRoutes.js
 ├── middleware/
 │   └── authMiddleware.js
 ├── .env
@@ -81,6 +84,12 @@ backend/
 ### Orders
 - `POST /api/orders` - Place a new order
 - `GET /api/orders` - Get all orders
+
+### Restaurants
+- `GET /api/restaurants` - Get all restaurants
+- `POST /api/restaurants` - Add a new restaurant
+- `PUT /api/restaurants/:id` - Update a restaurant by ID
+- `DELETE /api/restaurants/:id` - Delete a restaurant by ID
 
 ## License
 This project is licensed under the MIT License.

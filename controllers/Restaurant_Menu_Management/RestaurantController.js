@@ -1,59 +1,61 @@
-const Restaurant = require("../../Models/Restaurants");
-const MenuItem = require("../../Models/MenuItems");
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-// Add a new restaurant (Admin only)
-const addRestaurant = async (req, res) => {
-  try {
-    const { name, location, cuisine, address } = req.body;
-const exitingresturant=await Restaurant.findOne({name,address});
-if(exitingresturant){
-  return res.status(400).json({message:"Restaurant already exists at this address. Choose another place."});
+const Menu = ({ restaurantId, addToCart }) => {
+  const [items, setItems] = useState([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-}
-    const restaurant = new Restaurant({ name, location, cuisine, address });
-await restaurant.save();
-    res.status(201).json({ message: "Restaurant added successfully", restaurant });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        const response = await axios.get(`/api/menu/${restaurantId}`);
+        setItems(response.data.menuItems || []); // Ensure items is always an array
+      } catch (err) {
+        setError(err.message);
+        setItems([]); // Prevent undefined errors
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMenuItems();
+  }, [restaurantId]);
+
+  const filteredItems = (items || []).filter((item) =>
+    item?.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (loading) return <p>Loading menu...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <div className="p-4">
+      <input
+        type="text"
+        placeholder="Search food..."
+        className="w-full p-2 mb-4 border border-gray-300 rounded"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredItems.map((item) => (
+          <div key={item.id} className="border p-4 rounded-lg shadow-md">
+            <img src={item.image} alt={item.name} className="w-full h-40 object-cover rounded" />
+            <h3 className="text-lg font-semibold mt-2">{item.name}</h3>
+            <p className="text-gray-600">₹{item.price}</p>
+            <button
+              onClick={() => addToCart(item)}
+              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
-// Fetch list of restaurants
-const getRestaurants = async (req, res) => {
-  try {
-    const restaurants = await Restaurant.find();
-    res.status(200).json({ restaurants });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Add a menu item (Admin only)
-const addMenuItem = async (req, res) => {
-  try {
-    const { name, price } = req.body;
-const exitingmenu=await MenuItem.findOne({name});
-if(exitingmenu){
-  return res.status(400).json({message:"This item is already exit in the menuitems "});
-}
-    const restaurantId = req.params.id;
-    const menuItem = new MenuItem({ name, price, restaurant: restaurantId });
-    await menuItem.save();
-    res.status(201).json({ message: "Menu item added successfully", menuItem });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Fetch menu items for a restaurant
-const getMenuItems = async (req, res) => {
-  try {
-    const restaurantId = req.params.id;
-    const menuItems = await MenuItem.find({ restaurant: restaurantId });
-    res.status(200).json({ menuItems });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-module.exports = { addRestaurant, getRestaurants, addMenuItem, getMenuItems };
+export default Menu;

@@ -1,19 +1,22 @@
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); // ✅ Make sure you have this import
+const secretKey = "your_secret_key"; // Replace with your actual secret key
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
+    const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ error: "Access denied, no token provided" });
-  }
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
 
-  try {
-    const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
-    req.user = decoded; // Attach user data to request
-    next();
-  } catch (error) {
-    return res.status(401).json({ error: "Invalid token" });
-  }
+    const token = authHeader.split(" ")[1];
+
+    try {
+        const decoded = jwt.verify(token, secretKey);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(403).json({ message: "Forbidden: Invalid token" });
+    }
 };
 
 module.exports = authMiddleware;

@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
-const secretKey = "your_secret_key"; 
+const dotenv = require("dotenv");
 
-const authMiddleware = (req, res, next) => {
+dotenv.config();
+const secretKey = process.env.JWT_SECRET || "your_secret_key";
+
+const authenticate = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -13,10 +16,18 @@ const authMiddleware = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, secretKey);
         req.user = decoded;
+
         next();
     } catch (error) {
-        return res.status(403).json({ message: "Forbidden: Invalid token" });
+        return res.status(403).json({ message: "Forbidden: Invalid or expired token" });
     }
 };
 
-module.exports = authMiddleware;
+const authorizeAdmin = (req, res, next) => {
+    if (!req.user || req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    next();
+};
+
+module.exports = { authenticate, authorizeAdmin };

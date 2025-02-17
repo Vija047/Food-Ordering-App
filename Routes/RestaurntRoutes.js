@@ -1,7 +1,7 @@
 const express = require('express');
 const { addRestaurant, getRestaurants } = require('../controllers/Restaurant_Menu_Management/RestaurantController');
 const { addMenuItem, getMenuItems } = require('../controllers/Restaurant_Menu_Management/Menucontroller');
-const { authenticate, authorizeAdmin } = require('../middleware/auth_Resta');
+const { authenticate, authorizeAdmin } = require('../middleware/auth_Resta'); // Ensure this path is correct
 
 const router = express.Router();
 

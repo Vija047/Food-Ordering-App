@@ -11,6 +11,6 @@ router.get('/get', getRestaurants); // Get list of restaurants
 
 // Menu Routes
 router.post('/:id/menu', authenticate, authorizeAdmin, addMenuItem); // Add a menu item (Admin only)
-router.get('/:id/menu', getMenuItems); // Fetch menu items of a restaurant
+router.get('/getmenu/:id', getMenuItems); // Fetch menu items of a restaurant
 
 module.exports = router;

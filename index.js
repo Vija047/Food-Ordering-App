@@ -26,6 +26,7 @@ app.use(cors({
 // Register routes
 app.use('/api', userRoutes);
 app.use("/api", restaurantRoutes);
+
 app.use("/api", orderRoutes);
 
 // Basic test route

@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken"); // ✅ Make sure you have this import
-const secretKey = "your_secret_key"; // Replace with your actual secret key
+const jwt = require("jsonwebtoken");
+const secretKey = "your_secret_key"; 
 
 const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;

@@ -54,6 +54,3 @@ Make sure to configure your `.env` file with the necessary environment variables
 
 - Integrated third-party payment gateways for seamless transaction processing.
 - Implemented real-time order tracking using WebSockets.
-- Ensured high code quality and maintainability with ESLint and Prettier.
-- Deployed the backend on cloud platforms like AWS and Heroku for high availability and scalability.
-- Conducted thorough testing using Jest and Supertest to ensure reliability and performance.

@@ -1,8 +1,59 @@
 # Food Ordering App - Backend
-## Resume Points
 
-- Developed a robust backend for a Food Ordering App using Node.js and Express.js.
-- Implemented secure user authentication and authorization with JWT and middleware.
-- Designed and managed a scalable MongoDB database with Mongoose.
-- Created comprehensive RESTful APIs for various functionalities including user authentication, menu management, order processing, and restaurant management.
 
+## Backend Folder Structure
+
+```
+/backend
+├── config
+│   ├── db.js
+│
+├── controllers
+│   ├── authController.js
+│   ├── menuController.js
+│   ├── orderController.js
+│   └── restaurantController.js
+├── middlewares
+│   ├── authMiddleware.js
+│   └── errorHandler.js
+├── models
+│   ├── User.js
+│   ├── Menu.js
+│   ├── Order.js
+│   └── Restaurant.js
+├── routes
+│   ├── authRoutes.js
+│   ├── menuRoutes.js
+│   ├── orderRoutes.js
+│   └── restaurantRoutes.js
+├── utils
+│   └── helpers.js
+├── .env
+├── index.js
+└── server.js
+```
+## Import Points
+
+To run the backend server, ensure you have the following dependencies installed:
+
+- Node.js
+- Express.js
+- Mongoose
+- JSON Web Token (JWT)
+- dotenv
+
+You can install these dependencies using npm:
+
+```bash
+npm install express mongoose jsonwebtoken dotenv
+```
+
+Make sure to configure your `.env` file with the necessary environment variables such as database connection string and JWT secret.
+
+## Additional Points
+
+- Integrated third-party payment gateways for seamless transaction processing.
+- Implemented real-time order tracking using WebSockets.
+- Ensured high code quality and maintainability with ESLint and Prettier.
+- Deployed the backend on cloud platforms like AWS and Heroku for high availability and scalability.
+- Conducted thorough testing using Jest and Supertest to ensure reliability and performance.

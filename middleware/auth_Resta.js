@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const secretKey = process.env.your_jwt_secret_key;
+const secretKey = process.env.JWT_SECRET;
 if (!secretKey) {
   console.error("Missing JWT secret key!");
 }
@@ -28,7 +28,7 @@ const authenticate = (req, res, next) => {
 };
 
 const authorizeAdmin = (req, res, next) => {
-  if (!req.user || req.user.userType !== "admin") {
+  if (!req.user || req.user.userType == "admin") {
     return res.status(403).json({ message: " Admin access required" });
   }
   next();

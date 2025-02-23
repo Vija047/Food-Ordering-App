@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Restaurant Routes
 router.post('/admin', authenticate, authorizeAdmin, addRestaurant); // Add a new restaurant (Admin only)
-router.get('/get', getRestaurants); // Get list of restaurants
+router.get('/get/admin', getRestaurants); // Get list of restaurants
 
 // Menu Routes
 router.post('/:id/menu', authenticate, authorizeAdmin, addMenuItem); // Add a menu item (Admin only)

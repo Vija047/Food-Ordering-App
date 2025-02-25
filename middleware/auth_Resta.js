@@ -33,5 +33,24 @@ const authorizeAdmin = (req, res, next) => {
   }
   next();
 };
+const protect = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1]; // Extract token from "Bearer <token>"
 
-module.exports = { authenticate, authorizeAdmin };
+    if (!token) {
+      return res.status(401).json({ error: "Not authorized, no token" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+    req.user = await User.findById(decoded.id).select("-password"); // Attach user info to req
+
+    if (!req.user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    next(); // Proceed to next middleware/route handler
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+};
+module.exports = { authenticate, authorizeAdmin ,protect};

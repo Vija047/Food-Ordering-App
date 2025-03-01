@@ -9,10 +9,10 @@ if (!secretKey) {
 }
 
 const authenticate = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.header("Authorization");
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: " No token provided" });
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
 
   const token = authHeader.split(" ")[1];
@@ -22,35 +22,38 @@ const authenticate = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Token verification failed:", error);
-    return res.status(403).json({ message: " Invalid or expired token" });
+    console.error("Token verification failed:", error.message);
+    return res.status(403).json({ message: "Unauthorized: Invalid or expired token" });
   }
 };
 
 const authorizeAdmin = (req, res, next) => {
-  if (!req.user || req.user.userType == "admin") {
-    return res.status(403).json({ message: " Admin access required" });
+  if (!req.user || req.user.userType !== "admin") {
+    return res.status(403).json({ message: "Unauthorized: Admin access required" });
   }
   next();
 };
+
 const protect = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1]; // Extract token from "Bearer <token>"
+    const token = req.header("Authorization")?.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ error: "Not authorized, no token" });
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
-    req.user = await User.findById(decoded.id).select("-password"); // Attach user info to req
+    const decoded = jwt.verify(token, secretKey);
+    req.user = decoded; // Attach user info
 
     if (!req.user) {
-      return res.status(401).json({ error: "User not found" });
+      return res.status(401).json({ message: "Unauthorized: User not found" });
     }
 
-    next(); // Proceed to next middleware/route handler
+    next(); // Proceed to the next middleware
   } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
+    console.error("JWT Verification Error:", error.message);
+    res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
-module.exports = { authenticate, authorizeAdmin ,protect};
+
+module.exports = { authenticate, authorizeAdmin, protect };
